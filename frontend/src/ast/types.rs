@@ -1,5 +1,5 @@
 use crate::{
-    ast::traits::{GetType, IsAssignable, StringToUVType},
+    ast::traits::{GetType, IsAssignable, StringToUVMathOp, StringToUVType},
     types::{Span, Spanned},
 };
 
@@ -102,10 +102,11 @@ pub enum ASTBlockType {
 
     FunctionCall(),
     VariableAssignment(),
+    VariableAccess(),
 
     ConditionalOp(),
 
-    MathOp(),
+    MathOp(MathOp),
     LogicalOp(),
 
     ForLoop(),
@@ -144,7 +145,46 @@ impl GetType for VariableDefinition {
     }
 }
 
-// ---------------------------- TESTS -------------------------------
+// ------------------------ Math Operations ----------------------------------
+#[derive(Debug)]
+pub struct MathOp {
+    pub op_type: MathOpType,
+    pub operands: Vec<ASTBlockType>,
+}
+
+#[derive(Debug)]
+pub enum MathOpType {
+    Sum,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+}
+
+impl StringToUVMathOp for str {
+    fn to_uvmath(&self) -> Option<MathOpType> {
+        Some(match self {
+            "sum" => MathOpType::Sum,
+            "sub" => MathOpType::Sub,
+            "mul" => MathOpType::Mul,
+            "div" => MathOpType::Div,
+            "mod" => MathOpType::Mod,
+            _ => return None,
+        })
+    }
+}
+
+impl MathOpType {
+    /// If math operation can handle more than two arguments
+    pub fn can_handle_numerous_op(&self) -> bool {
+        match self {
+            MathOpType::Sum | MathOpType::Mul => true,
+            MathOpType::Div | MathOpType::Mod | MathOpType::Sub => false,
+        }
+    }
+}
+
+// ---------------------------- TESTS ----------------------------------------
 
 #[cfg(test)]
 mod tests {

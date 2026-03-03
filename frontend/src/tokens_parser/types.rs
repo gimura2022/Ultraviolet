@@ -5,7 +5,10 @@ pub struct UVParseNode {
     pub name: String,
     pub children: Vec<UVParseBody>,
 
+    /// Node is self-closing `<name />`
     pub self_closing: bool,
+
+    /// Node extra param `<name extra_param>...</ node>`
     pub extra_param: String,
 
     pub span: Span,

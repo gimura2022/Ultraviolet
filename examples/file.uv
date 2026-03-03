@@ -2,18 +2,11 @@
 
     <head></head>
     <main>
-        <union>
-            <int />
-        </union>
-
-        <null />
-        <let>
-            <name>aa</name>
-            <value>
-                <float>6.3</float>
-            </value>
-            <const />
-        </let>
+        <sum>
+            <int>123</int>
+            <int>123</int>
+            <int>123</int>
+        </sum>
     </main>
 
 </program>

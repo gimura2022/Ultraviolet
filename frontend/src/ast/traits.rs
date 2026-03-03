@@ -1,4 +1,4 @@
-use crate::ast::types::UVType;
+use crate::ast::types::{MathOpType, UVType};
 
 pub trait GetType {
     /// Get type of node / value
@@ -26,4 +26,12 @@ pub trait StringToUVType {
     /// Example:
     /// `String::from("int").to_uvtype();`
     fn to_uvtype(&self) -> Option<UVType>;
+}
+
+pub trait StringToUVMathOp {
+    /// Convert string-representation to a Ultraviolet math type
+    ///
+    /// Example:
+    /// `String::from("int").to_uvmath();`
+    fn to_uvmath(&self) -> Option<MathOpType>;
 }

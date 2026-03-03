@@ -4,7 +4,8 @@ use regex::Regex;
 
 use crate::{
     ast::{
-        traits::StringToUVType,
+        math_op::parse_math_op,
+        traits::{StringToUVMathOp, StringToUVType},
         type_parser::parse_type,
         types::{ASTBlockType, ProgramBlock, VariableDefinition},
         values::parse_value,
@@ -15,6 +16,7 @@ use crate::{
 };
 use once_cell::sync::Lazy;
 
+mod math_op;
 mod traits;
 mod type_parser;
 mod types;
@@ -52,6 +54,9 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
 
         // Values such as int, float, etc.
         name if name.to_uvtype().is_some() => parse_value(node)?,
+
+        // Parse math operations, such as sum, div, etc.
+        name if name.to_uvmath().is_some() && !node.self_closing => parse_math_op(node)?,
 
         name => {
             return Err(SpannedError::new(
