@@ -58,6 +58,7 @@ pub fn gen_main_ast(node: &UVParseNode) -> GeneratorOutputType {
     })))
 }
 
+/// Main recursively invoked parsing function
 pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
     Ok(match node.name.as_str() {
         "let" => parse_var_definition(node)?,
@@ -75,10 +76,10 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
         name if name.to_uvmath().is_some() && !node.self_closing => parse_math_op(node)?,
 
         // Parse variable assign
-        name if !node.self_closing => parse_var_assign(node)?,
+        _ if !node.self_closing => parse_var_assign(node)?,
 
         // Parse variable access
-        name if node.self_closing => parse_var_access(node)?,
+        _ if node.self_closing => parse_var_access(node)?,
 
         name => {
             return Err(SpannedError::new(
