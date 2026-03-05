@@ -19,6 +19,7 @@ pub fn parse_math_op(node: &UVParseNode) -> GeneratorOutputType {
     Ok(ASTBlockType::MathOp(MathOp {
         op_type,
         operands: children,
+        span: node.span,
     }))
 }
 

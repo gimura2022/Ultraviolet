@@ -20,6 +20,7 @@ pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {
     Ok(ASTBlockType::CompareOp(CompareOp {
         op_type,
         operands: children,
+        span: node.span,
     }))
 }
 

@@ -201,6 +201,7 @@ pub struct VariableAccess {
 pub struct MathOp {
     pub op_type: MathOpType,
     pub operands: Vec<ASTBlockType>,
+    pub span: Span,
 }
 
 #[derive(Debug)]
@@ -250,6 +251,7 @@ pub enum CompareOpType {
 pub struct CompareOp {
     pub op_type: CompareOpType,
     pub operands: Vec<ASTBlockType>,
+    pub span: Span,
 }
 
 impl IsVariadic for CompareOpType {
