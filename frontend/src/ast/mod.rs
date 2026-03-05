@@ -93,7 +93,7 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
 
         name => {
             return Err(SpannedError::new(
-                format!("Unexpected <{name}> tag"),
+                format!("Unexpected `{name}` tag"),
                 node.span,
             ));
         }
