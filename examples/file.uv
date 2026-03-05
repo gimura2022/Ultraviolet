@@ -2,10 +2,9 @@
 
     <head></head>
     <main>
-        <eq>
+        <not>
             <int>12</int>
-            <var />
-        </eq>
+        </not>
     </main>
 
 </program>

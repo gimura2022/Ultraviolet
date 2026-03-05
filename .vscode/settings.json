@@ -3,6 +3,7 @@
     "files.autoSaveDelay": 250,
     "cSpell.words": [
         "uvcompare",
+        "uvlogical",
         "uvmath",
         "uvtype"
     ]

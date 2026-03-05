@@ -28,7 +28,7 @@ pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {
 fn parse_arguments(node: &UVParseNode, only_two: bool) -> Result<Vec<ASTBlockType>, SpannedError> {
     if !node.all_tags() {
         return Err(SpannedError::new(
-            "Unexpected literals inside parse operation",
+            "Unexpected literals inside comparison operation",
             node.span,
         ));
     }

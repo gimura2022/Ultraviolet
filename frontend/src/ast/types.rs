@@ -1,6 +1,7 @@
 use crate::{
     ast::traits::{
-        GetType, IsAssignable, IsVariadic, StringToUVCompareOp, StringToUVMathOp, StringToUVType,
+        ArgumentsCount, GetType, IsAssignable, IsVariadic, StringToUVCompareOp,
+        StringToUVLogicalOp, StringToUVMathOp, StringToUVType,
     },
     types::{Span, Spanned},
 };
@@ -139,7 +140,7 @@ pub enum ASTBlockType {
     ConditionalOp(),
 
     MathOp(MathOp),
-    LogicalOp(),
+    LogicalOp(LogicalOp),
     CompareOp(CompareOp),
 
     ForLoop(),
@@ -270,6 +271,48 @@ impl StringToUVCompareOp for str {
             "lte" => CompareOpType::LessEquals,
             "gt" => CompareOpType::Greater,
             "gte" => CompareOpType::GreaterEquals,
+            _ => return None,
+        })
+    }
+}
+
+// ----------------------- Logical Operators ---------------------------------
+#[derive(Debug)]
+pub enum LogicalOpType {
+    And,
+    Or,
+    Not,
+}
+
+#[derive(Debug)]
+pub struct LogicalOp {
+    pub op_type: LogicalOpType,
+    pub operands: Vec<ASTBlockType>,
+    pub span: Span,
+}
+
+impl ArgumentsCount for LogicalOpType {
+    fn min_arguments_count(&self) -> usize {
+        match self {
+            LogicalOpType::And | LogicalOpType::Or => 2,
+            LogicalOpType::Not => 1,
+        }
+    }
+
+    fn max_arguments_count(&self) -> Option<usize> {
+        match self {
+            LogicalOpType::And | LogicalOpType::Or => None,
+            LogicalOpType::Not => Some(1),
+        }
+    }
+}
+
+impl StringToUVLogicalOp for str {
+    fn to_uvlogical(&self) -> Option<LogicalOpType> {
+        Some(match self {
+            "and" => LogicalOpType::And,
+            "or" => LogicalOpType::Or,
+            "not" => LogicalOpType::Not,
             _ => return None,
         })
     }

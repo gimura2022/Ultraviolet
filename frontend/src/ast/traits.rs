@@ -1,4 +1,4 @@
-use crate::ast::types::{CompareOpType, MathOpType, UVType};
+use crate::ast::types::{CompareOpType, LogicalOpType, MathOpType, UVType};
 
 pub trait GetType {
     /// Get type of node / value
@@ -42,6 +42,22 @@ pub trait StringToUVCompareOp {
     /// Example:
     /// `String::from("eq").to_uvcompare();`
     fn to_uvcompare(&self) -> Option<CompareOpType>;
+}
+
+pub trait StringToUVLogicalOp {
+    /// Convert string-representation to a Ultraviolet logical op type
+    ///
+    /// Example:
+    /// `String::from("and").to_uvlogical();`
+    fn to_uvlogical(&self) -> Option<LogicalOpType>;
+}
+
+pub trait ArgumentsCount {
+    /// Get allowed minimum of arguments count
+    fn min_arguments_count(&self) -> usize;
+
+    /// Get allowed maximum of arguments count
+    fn max_arguments_count(&self) -> Option<usize>;
 }
 
 pub trait IsVariadic {
