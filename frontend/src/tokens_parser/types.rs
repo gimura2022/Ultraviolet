@@ -36,8 +36,16 @@ impl UVParseNode {
         })
     }
 
+    /// Get inner child at provided index
+    pub fn get_child_at(&self, pos: usize) -> Option<&UVParseBody> {
+        match self.children.get(pos) {
+            Some(child) => Some(child),
+            None => None,
+        }
+    }
+
     /// Get inner TAG at provided index
-    pub fn get_child_node(&self, pos: usize) -> Option<&UVParseNode> {
+    pub fn get_tag_at(&self, pos: usize) -> Option<&UVParseNode> {
         match self.children.get(pos) {
             Some(UVParseBody::Tag(child)) => Some(child),
             _ => None,

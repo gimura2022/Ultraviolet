@@ -131,8 +131,8 @@ pub enum ASTBlockType {
     FunctionDefinition(),
 
     FunctionCall(),
-    VariableAssignment(),
-    VariableAccess(),
+    VariableAssignment(VariableAssign),
+    VariableAccess(VariableAccess),
 
     ConditionalOp(),
 
@@ -174,6 +174,24 @@ impl GetType for VariableDefinition {
     fn get_type(&self) -> UVType {
         todo!()
     }
+}
+
+// ------------------------- Variable Assign ---------------------------------
+
+#[derive(Debug)]
+pub struct VariableAssign {
+    pub name: String,
+    pub value: Spanned<Box<ASTBlockType>>,
+
+    pub span: Span,
+}
+
+// ------------------------ Variable Access ----------------------------------
+
+#[derive(Debug)]
+pub struct VariableAccess {
+    pub name: String,
+    pub span: Span,
 }
 
 // ------------------------ Math Operations ----------------------------------

@@ -2,22 +2,9 @@
 
     <head></head>
     <main>
-        <union>
-            <str />
-            <null />
-            <union>
-                <int />
-            </union>
-        </union>
-
-        <let>
-            <!-- Variable name automatically casts to string -->
-            <name>variable_name</name>
-            <value>
-                <int>69</int>
-            </value>
-            <const />
-        </let>
+        <sss>
+            <int>123</int>
+        </sss>
     </main>
 
 </program>
