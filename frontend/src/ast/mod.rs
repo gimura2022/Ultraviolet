@@ -3,8 +3,9 @@ use regex::Regex;
 
 use crate::{
     ast::{
+        compare_op::parse_compare_op,
         math_op::parse_math_op,
-        traits::{StringToUVMathOp, StringToUVType},
+        traits::{StringToUVCompareOp, StringToUVMathOp, StringToUVType},
         type_parser::parse_type,
         types::{ASTBlockType, ProgramBlock},
         values::parse_value,
@@ -15,6 +16,7 @@ use crate::{
 };
 use once_cell::sync::Lazy;
 
+mod compare_op;
 mod math_op;
 mod traits;
 mod type_parser;
@@ -74,6 +76,9 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
 
         // Parse math operations, such as sum, div, etc.
         name if name.to_uvmath().is_some() && !node.self_closing => parse_math_op(node)?,
+
+        // Parse compare operators, such as eq, neq, etc.
+        name if name.to_uvcompare().is_some() && !node.self_closing => parse_compare_op(node)?,
 
         // Parse variable assign
         _ if !node.self_closing => parse_var_assign(node)?,

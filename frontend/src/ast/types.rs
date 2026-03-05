@@ -1,5 +1,7 @@
 use crate::{
-    ast::traits::{GetType, IsAssignable, StringToUVMathOp, StringToUVType},
+    ast::traits::{
+        GetType, IsAssignable, IsVariadic, StringToUVCompareOp, StringToUVMathOp, StringToUVType,
+    },
     types::{Span, Spanned},
 };
 
@@ -138,7 +140,7 @@ pub enum ASTBlockType {
 
     MathOp(MathOp),
     LogicalOp(),
-    CompareOp(),
+    CompareOp(CompareOp),
 
     ForLoop(),
     WhileLoop(),
@@ -223,13 +225,51 @@ impl StringToUVMathOp for str {
     }
 }
 
-impl MathOpType {
-    /// If math operation can handle more than two arguments
-    pub fn is_variadic(&self) -> bool {
+impl IsVariadic for MathOpType {
+    fn is_variadic(&self) -> bool {
         match self {
             MathOpType::Sum | MathOpType::Mul => true,
             MathOpType::Div | MathOpType::Mod | MathOpType::Sub => false,
         }
+    }
+}
+
+// ----------------------- Compare Operators ---------------------------------
+
+#[derive(Debug)]
+pub enum CompareOpType {
+    Equality,
+    NotEquality,
+    Greater,
+    GreaterEquals,
+    Less,
+    LessEquals,
+}
+
+#[derive(Debug)]
+pub struct CompareOp {
+    pub op_type: CompareOpType,
+    pub operands: Vec<ASTBlockType>,
+}
+
+impl IsVariadic for CompareOpType {
+    fn is_variadic(&self) -> bool {
+        // TODO: In interpreter, implement proper handling variadic arguments
+        return false;
+    }
+}
+
+impl StringToUVCompareOp for str {
+    fn to_uvcompare(&self) -> Option<CompareOpType> {
+        Some(match self {
+            "eq" => CompareOpType::Equality,
+            "neq" => CompareOpType::NotEquality,
+            "lt" => CompareOpType::Less,
+            "lte" => CompareOpType::LessEquals,
+            "gt" => CompareOpType::Greater,
+            "gte" => CompareOpType::GreaterEquals,
+            _ => return None,
+        })
     }
 }
 

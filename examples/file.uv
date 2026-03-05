@@ -2,9 +2,10 @@
 
     <head></head>
     <main>
-        <sss>
-            <int>123</int>
-        </sss>
+        <eq>
+            <int>12</int>
+            <var />
+        </eq>
     </main>
 
 </program>

@@ -1,35 +1,40 @@
 use crate::{
     ast::{
         GeneratorOutputType, generate_ast,
-        traits::{IsVariadic, StringToUVMathOp},
-        types::{ASTBlockType, MathOp},
+        traits::{IsVariadic, StringToUVCompareOp},
+        types::{ASTBlockType, CompareOp},
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
 };
 
-pub fn parse_math_op(node: &UVParseNode) -> GeneratorOutputType {
+/// Parse Ultraviolet compare operators
+pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {
     let op_type = node
         .name
-        .to_uvmath()
-        .ok_or(SpannedError::new("Unknown math operation", node.span))?;
+        .to_uvcompare()
+        .ok_or(SpannedError::new("Unknown comparison operation", node.span))?;
 
     let children = parse_arguments(node, !op_type.is_variadic())?;
 
-    Ok(ASTBlockType::MathOp(MathOp {
+    Ok(ASTBlockType::CompareOp(CompareOp {
         op_type,
         operands: children,
     }))
 }
 
-/// Parse arguments for math functions
-pub fn parse_arguments(
-    node: &UVParseNode,
-    only_two: bool,
-) -> Result<Vec<ASTBlockType>, SpannedError> {
+/// Parse arguments for compare
+fn parse_arguments(node: &UVParseNode, only_two: bool) -> Result<Vec<ASTBlockType>, SpannedError> {
     if !node.all_tags() {
         return Err(SpannedError::new(
-            "Unexpected literals inside math operation",
+            "Unexpected literals inside parse operation",
+            node.span,
+        ));
+    }
+
+    if node.children_len() < 2 {
+        return Err(SpannedError::new(
+            "Comparison operator cannot have less than 2 operands",
             node.span,
         ));
     }

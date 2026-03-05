@@ -1,4 +1,4 @@
-use crate::ast::types::{MathOpType, UVType};
+use crate::ast::types::{CompareOpType, MathOpType, UVType};
 
 pub trait GetType {
     /// Get type of node / value
@@ -32,6 +32,19 @@ pub trait StringToUVMathOp {
     /// Convert string-representation to a Ultraviolet math type
     ///
     /// Example:
-    /// `String::from("int").to_uvmath();`
+    /// `String::from("sum").to_uvmath();`
     fn to_uvmath(&self) -> Option<MathOpType>;
+}
+
+pub trait StringToUVCompareOp {
+    /// Convert string-representation to a Ultraviolet compare op type
+    ///
+    /// Example:
+    /// `String::from("eq").to_uvcompare();`
+    fn to_uvcompare(&self) -> Option<CompareOpType>;
+}
+
+pub trait IsVariadic {
+    /// Check if operator can handle variadic arguments
+    fn is_variadic(&self) -> bool;
 }
