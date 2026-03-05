@@ -3,7 +3,7 @@ use colored::Colorize;
 use crate::{
     ast::{
         GeneratorOutputType, generate_ast, is_valid_identifier,
-        types::{ASTBlockType, VariableDefinition},
+        types::{ASTBlockType, VariableAssign, VariableDefinition},
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
@@ -54,7 +54,7 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
         ));
     }
 
-    let value = value_block.get_child_node(0).unwrap(); // This unwrap is unreachable due checks above
+    let value = value_block.get_tag_at(0).unwrap(); // This unwrap is unreachable due checks above
     let is_const = match node.get_child_by_name("const") {
         Some(c) if !c.self_closing => {
             return Err(SpannedError::new(
@@ -70,6 +70,41 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
         name: Spanned::new(name.value.clone(), name_block.span),
         value: Spanned::new(Box::new(generate_ast(value)?), value_block.span),
         is_const: is_const,
+        span: node.span,
+    }))
+}
+
+/// Parse variable assignment
+pub fn parse_var_assign(node: &UVParseNode) -> GeneratorOutputType {
+    if !node.all_tags() {
+        let unexpected_lit = node.get_inner_literal().ok_or(SpannedError::new(
+            "[INTERNAL ERROR] Cannot get inner literal for error",
+            node.span,
+        ))?;
+        return Err(SpannedError::new(
+            "Cannot assign literal to a variable",
+            unexpected_lit.span,
+        ));
+    }
+
+    if node.children_len() != 1 {
+        let extra = node.get_child_at(1).ok_or(SpannedError::new(
+            "[INTERNAL ERROR] Cannot get inner child for error",
+            node.span,
+        ))?;
+        return Err(SpannedError::new(
+            "Variable assign should have only one nested tag",
+            extra.get_span(),
+        ));
+    }
+
+    let value = node
+        .get_tag_at(0)
+        .ok_or(SpannedError::new("Cannot get inner tag", node.span))?;
+
+    Ok(ASTBlockType::VariableAssignment(VariableAssign {
+        name: node.name.clone(),
+        value: Spanned::new(Box::new(generate_ast(value)?), value.span),
         span: node.span,
     }))
 }

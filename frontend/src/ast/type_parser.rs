@@ -58,7 +58,7 @@ fn parse_union(node: &UVParseNode) -> Result<UVType, SpannedError> {
     }
 
     if node.children_len() == 1 {
-        return Ok(parse(node.get_child_node(0).unwrap())?);
+        return Ok(parse(node.get_tag_at(0).unwrap())?);
     }
 
     let types = node
