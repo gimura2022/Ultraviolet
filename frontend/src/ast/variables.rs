@@ -1,7 +1,5 @@
 use std::ops::Deref;
 
-use colored::Colorize;
-
 use crate::{
     ast::{
         GeneratorOutputType, generate_ast, is_valid_identifier,
@@ -53,12 +51,9 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
         .ok_or(SpannedError::new("Variable must be initialized", node.span))?;
 
     if value_block.children_len() != 1 || !value_block.all_tags() {
-        return Err(SpannedError::new(
-            format!(
-                "Variable value must have only one inner tag.\n{}{}",
-                "tip".green(),
-                ": If you want to place multiple tags, wrap them in a <g> tag.",
-            ),
+        return Err(SpannedError::new_tipped(
+            "Variable value must have only one inner tag.",
+            "If you want to place multiple tags, wrap them in a <g> tag.",
             value_block.span,
         ));
     }

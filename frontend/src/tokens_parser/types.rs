@@ -103,7 +103,7 @@ impl Positional for UVParseBody {
     fn get_span(&self) -> Span {
         match self {
             UVParseBody::String(type_with_span) => type_with_span.span,
-            UVParseBody::Tag(uvparse_node) => uvparse_node.span,
+            UVParseBody::Tag(parse_node) => parse_node.span,
         }
     }
 }

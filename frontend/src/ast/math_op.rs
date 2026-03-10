@@ -1,6 +1,6 @@
 use crate::{
     ast::{
-        GeneratorOutputType, generate_ast,
+        GeneratorOutputType, parse_children_vec,
         traits::{IsVariadic, StringToUVMathOp},
         types::{ASTBlockType, MathOp},
     },
@@ -42,8 +42,5 @@ pub fn parse_arguments(
         ));
     }
 
-    node.get_all_tags()
-        .into_iter()
-        .map(|ch| generate_ast(ch))
-        .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
+    parse_children_vec(node)
 }

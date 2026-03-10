@@ -10,6 +10,7 @@
                         <name>some_var</name>
                         <value>
                             <int>0</int>
+                            <int>0</int>
                         </value>
                     </let>
                     <lt>

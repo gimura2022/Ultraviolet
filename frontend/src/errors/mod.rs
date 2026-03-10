@@ -7,6 +7,7 @@ pub mod error_renderer;
 /// Simple parse error
 pub struct SpannedError {
     message: String,
+    tip: Option<String>,
     span: Span,
 }
 
@@ -16,6 +17,15 @@ impl SpannedError {
         Self {
             message: message.into(),
             span,
+            tip: None,
+        }
+    }
+
+    pub fn new_tipped(message: impl Into<String>, tip: impl Into<String>, span: Span) -> Self {
+        Self {
+            message: message.into(),
+            span,
+            tip: Some(tip.into()),
         }
     }
 }

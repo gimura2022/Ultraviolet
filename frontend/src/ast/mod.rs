@@ -47,13 +47,13 @@ pub fn gen_main_ast(node: &UVParseNode) -> GeneratorOutputType {
     }
 
     let head_parsed = if let Some(h) = node.get_child_by_name("head") {
-        Some(ASTBlockType::HeadBlock(parse_root_children(&h)?))
+        Some(ASTBlockType::HeadBlock(parse_children_vec(&h)?))
     } else {
         None
     };
 
     let main =
-        ASTBlockType::MainBlock(parse_root_children(node.get_child_by_name("main").ok_or(
+        ASTBlockType::MainBlock(parse_children_vec(node.get_child_by_name("main").ok_or(
             SpannedError::new("Main block in <program> is required", node.span),
         )?)?);
 
@@ -110,26 +110,6 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
             ));
         }
     })
-}
-
-/// Parse children in head and main tags
-fn parse_root_children(node: &UVParseNode) -> Result<Vec<ASTBlockType>, SpannedError> {
-    if !node.all_tags() {
-        let first_literal = node.get_inner_literal().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner literal for error",
-            node.span,
-        ))?;
-
-        return Err(SpannedError::new(
-            "Unexpected unwrapped literal in root tag",
-            first_literal.span,
-        ));
-    }
-
-    node.get_all_tags()
-        .iter()
-        .map(|ch| Ok(generate_ast(ch)?))
-        .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
 }
 
 /// Parse node children to ast

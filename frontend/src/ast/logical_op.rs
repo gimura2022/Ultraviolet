@@ -1,8 +1,6 @@
 use crate::{
     ast::{
-        GeneratorOutputType, generate_ast,
-        traits::{ArgumentsCount, StringToUVLogicalOp},
-        types::{ASTBlockType, LogicalOp},
+        GeneratorOutputType, parse_children_vec, traits::{ArgumentsCount, StringToUVLogicalOp}, types::{ASTBlockType, LogicalOp}
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
@@ -60,8 +58,5 @@ fn parse_arguments(
         ));
     }
 
-    node.get_all_tags()
-        .into_iter()
-        .map(|ch| generate_ast(ch))
-        .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
+    parse_children_vec(node)
 }
