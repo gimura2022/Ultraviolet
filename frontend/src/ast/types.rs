@@ -149,7 +149,7 @@ pub enum ASTBlockType {
     Value(Spanned<UVValue>),
     Type(UVType),
 
-    GroupBlock(),
+    GroupBlock(Box<Vec<ASTBlockType>>),
 }
 
 // --------------------------- PROGRAM BLOCK ------------------------

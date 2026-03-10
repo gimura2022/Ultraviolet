@@ -5,12 +5,20 @@
         <while>
             <!-- While condition -->
             <test>
-                <lt>
-                    <some_var />
-                    <int>10</int>
-                </lt>
+                <g>
+                    <let>
+                        <name>some_var</name>
+                        <value>
+                            <int>0</int>
+                        </value>
+                    </let>
+                    <lt>
+                        <some_var />
+                        <int>10</int>
+                    </lt>
+                </g>
             </test>
-        
+
             <body>
             </body>
         </while>

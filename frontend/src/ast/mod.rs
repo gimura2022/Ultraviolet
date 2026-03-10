@@ -76,6 +76,9 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
         // Parse while loop declaration
         "while" if !node.self_closing => parse_while_loop(node)?,
 
+        // Parse group block
+        "g" if !node.self_closing => ASTBlockType::GroupBlock(Box::new(parse_children_vec(node)?)),
+
         // Type parsing
         // FIXME: Parsing of types should only occur in special places
         // TODO: Move this parsing to a separate function
@@ -126,5 +129,21 @@ fn parse_root_children(node: &UVParseNode) -> Result<Vec<ASTBlockType>, SpannedE
     node.get_all_tags()
         .iter()
         .map(|ch| Ok(generate_ast(ch)?))
+        .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
+}
+
+/// Parse node children to ast
+pub fn parse_children_vec(n: &UVParseNode) -> Result<Vec<ASTBlockType>, SpannedError> {
+    if !n.all_tags() {
+        let literal = n.get_inner_literal().ok_or(SpannedError::new(
+            "[INTERNAL ERROR] Cannot get extra literal",
+            n.span,
+        ))?;
+        return Err(SpannedError::new("Unexpected literal", literal.span));
+    }
+
+    n.get_all_tags()
+        .iter()
+        .map(|n| generate_ast(n))
         .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
 }

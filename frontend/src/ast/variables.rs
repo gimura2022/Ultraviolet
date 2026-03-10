@@ -57,7 +57,7 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
             format!(
                 "Variable value must have only one inner tag.\n{}{}",
                 "tip".green(),
-                ": If you want to place multiple tags, wrap them in a <b> tag.",
+                ": If you want to place multiple tags, wrap them in a <g> tag.",
             ),
             value_block.span,
         ));

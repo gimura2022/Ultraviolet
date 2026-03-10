@@ -1,7 +1,6 @@
 use crate::{
     ast::{
-        GeneratorOutputType, generate_ast,
-        types::{ASTBlockType, ForLoop, WhileLoop},
+        GeneratorOutputType, generate_ast, parse_children_vec, types::{ASTBlockType, ForLoop, WhileLoop}
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
@@ -63,7 +62,7 @@ pub fn parse_for_loop(node: &UVParseNode) -> GeneratorOutputType {
         start: generate_ast(get_and_validate_inner_tag(node, "start")?)?,
         end: generate_ast(get_and_validate_inner_tag(node, "end")?)?,
         step,
-        body: Spanned::new(parse_loop_body(body)?, body.span),
+        body: Spanned::new(parse_children_vec(body)?, body.span),
         span: node.span,
     })))
 }
@@ -97,7 +96,7 @@ pub fn parse_while_loop(node: &UVParseNode) -> GeneratorOutputType {
 
     Ok(ASTBlockType::WhileLoop(Box::new(WhileLoop {
         test: generate_ast(get_and_validate_inner_tag(node, "test")?)?,
-        body: Spanned::new(parse_loop_body(body)?, body.span),
+        body: Spanned::new(parse_children_vec(body)?, body.span),
 
         span: node.span,
     })))
@@ -128,20 +127,4 @@ fn get_and_validate_inner_tag<'a>(
         "[INTERNAL ERROR] Cannot get inner tag",
         x_node.span,
     ))
-}
-
-// Parse inner children to ast
-fn parse_loop_body(body: &UVParseNode) -> Result<Vec<ASTBlockType>, SpannedError> {
-    if !body.all_tags() {
-        let literal = body.get_inner_literal().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get extra literal in `for` body",
-            body.span,
-        ))?;
-        return Err(SpannedError::new("Unexpected literal", literal.span));
-    }
-
-    body.get_all_tags()
-        .iter()
-        .map(|n| generate_ast(n))
-        .collect::<Result<Vec<ASTBlockType>, SpannedError>>()
 }
