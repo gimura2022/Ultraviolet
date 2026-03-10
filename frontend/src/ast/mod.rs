@@ -5,7 +5,7 @@ use crate::{
     ast::{
         compare_op::parse_compare_op,
         logical_op::parse_logical_op,
-        loops::parse_for_loop,
+        loops::{parse_for_loop, parse_while_loop},
         math_op::parse_math_op,
         traits::{StringToUVCompareOp, StringToUVLogicalOp, StringToUVMathOp, StringToUVType},
         type_parser::parse_type,
@@ -72,6 +72,9 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
 
         // Parse for loop declaration
         "for" if !node.self_closing => parse_for_loop(node)?,
+
+        // Parse while loop declaration
+        "while" if !node.self_closing => parse_while_loop(node)?,
 
         // Type parsing
         // FIXME: Parsing of types should only occur in special places

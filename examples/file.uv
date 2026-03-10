@@ -2,24 +2,18 @@
 
     <head></head>
     <main>
-        <for>
-            <iterator>iterator_name</iterator>
-            <start>
-                <int>0</int>
-            </start>
-            <end>
-                <int>10</int>
-            </end>
-            <!-- [OPTIONAL] Step -->
-            <step>
-                <float>0.5</float>
-            </step>
+        <while>
+            <!-- While condition -->
+            <test>
+                <lt>
+                    <some_var />
+                    <int>10</int>
+                </lt>
+            </test>
         
             <body>
-                <!-- Loop body -->
             </body>
-            
-        </for>
+        </while>
     </main>
 
 </program>

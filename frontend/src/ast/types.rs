@@ -144,7 +144,7 @@ pub enum ASTBlockType {
     CompareOp(CompareOp),
 
     ForLoop(Box<ForLoop>),
-    WhileLoop(),
+    WhileLoop(Box<WhileLoop>),
 
     Value(Spanned<UVValue>),
     Type(UVType),
@@ -325,6 +325,16 @@ pub struct ForLoop {
     pub start: ASTBlockType,
     pub end: ASTBlockType,
     pub step: Option<ASTBlockType>,
+    pub body: Spanned<Vec<ASTBlockType>>,
+
+    pub span: Span,
+}
+
+// ---------------------------- While loop -----------------------------------
+
+#[derive(Debug)]
+pub struct WhileLoop {
+    pub test: ASTBlockType,
     pub body: Spanned<Vec<ASTBlockType>>,
 
     pub span: Span,
