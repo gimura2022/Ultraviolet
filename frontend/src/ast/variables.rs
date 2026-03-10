@@ -102,14 +102,14 @@ pub fn parse_var_assign(node: &UVParseNode) -> GeneratorOutputType {
     }
 
     if node.children_len() != 1 {
-        let extra = node.get_child_at(1).ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner child for error",
-            node.span,
-        ))?;
+        let extra = node.get_child_at(1);
 
         return Err(SpannedError::new(
             "Variable assign should have only one nested tag",
-            extra.get_span(),
+            match extra {
+                Some(x) => x.get_span(),
+                None => node.span,
+            },
         ));
     }
 

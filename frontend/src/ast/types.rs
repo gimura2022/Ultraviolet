@@ -143,7 +143,7 @@ pub enum ASTBlockType {
     LogicalOp(LogicalOp),
     CompareOp(CompareOp),
 
-    ForLoop(),
+    ForLoop(Box<ForLoop>),
     WhileLoop(),
 
     Value(Spanned<UVValue>),
@@ -316,6 +316,18 @@ impl StringToUVLogicalOp for str {
             _ => return None,
         })
     }
+}
+
+// --------------------------- For loop --------------------------------------
+#[derive(Debug)]
+pub struct ForLoop {
+    pub iterator: Spanned<String>,
+    pub start: ASTBlockType,
+    pub end: ASTBlockType,
+    pub step: Option<ASTBlockType>,
+    pub body: Spanned<Vec<ASTBlockType>>,
+
+    pub span: Span,
 }
 
 // ---------------------------- TESTS ----------------------------------------
