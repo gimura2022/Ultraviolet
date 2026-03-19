@@ -7,7 +7,7 @@ use crate::{
         types::{ASTBlockType, VariableAccess, VariableAssign, VariableDefinition},
     },
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
     types::{Positional, Spanned},
 };
 
@@ -15,11 +15,7 @@ use crate::{
 pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
     let extra = node.search_extra_children(vec!["name", "value", "const", "type"]);
     if !extra.is_empty() {
-        let first = extra.first().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get first extra child",
-            node.span,
-        ))?;
-
+        let first = extra.first().unwrap_or_spanned(node.span)?;
         return Err(SpannedError::new(
             "Found extra children for variable definition",
             first.get_span(),
@@ -35,10 +31,9 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
         return Err(SpannedError::new("Invalid variable name", name_block.span));
     }
 
-    let name = name_block.get_inner_literal().ok_or(SpannedError::new(
-        "[INTERNAL ERROR] Cannot get inner literal",
-        node.span,
-    ))?;
+    let name = name_block
+        .get_inner_literal()
+        .unwrap_or_spanned(node.span)?;
 
     if !is_valid_identifier(&name) {
         return Err(SpannedError::new(
@@ -59,10 +54,7 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
         ));
     }
 
-    let value = value_block.get_tag_at(0).ok_or(SpannedError::new(
-        "[INTERNAL ERROR] Cannot get inner tag",
-        node.span,
-    ))?;
+    let value = value_block.get_tag_at(0).unwrap_or_spanned(node.span)?;
 
     // <const /> tag
     let is_const = match node.get_one_tag_by_name("const") {
@@ -91,10 +83,7 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
             ));
         }
         Some(ch) => Some(Spanned::new(
-            parse_type_raw(ch.get_tag_at(0).ok_or(SpannedError::new(
-                "[INTERNAL ERROR] Cannot get inner child",
-                ch.span,
-            ))?)?,
+            parse_type_raw(ch.get_tag_at(0).unwrap_or_spanned(ch.span)?)?,
             ch.span,
         )),
         None => None,
@@ -114,10 +103,7 @@ pub fn parse_var_definition(node: &UVParseNode) -> GeneratorOutputType {
 /// Parse variable assignment
 pub fn parse_var_assign(node: &UVParseNode) -> GeneratorOutputType {
     if !node.all_tags() {
-        let unexpected_lit = node.get_inner_literal().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner literal for error",
-            node.span,
-        ))?;
+        let unexpected_lit = node.get_inner_literal().unwrap_or_spanned(node.span)?;
 
         return Err(SpannedError::new(
             "Cannot assign literal to a variable",

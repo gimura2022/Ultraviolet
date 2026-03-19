@@ -1,4 +1,5 @@
 pub mod types;
+pub mod traits;
 
 use crate::{
     errors::SpannedError,

@@ -4,7 +4,7 @@ use crate::{
         types::{ASTBlockType, ForLoop, WhileLoop},
     },
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
     types::{Positional, Spanned},
 };
 
@@ -13,10 +13,7 @@ pub fn parse_for_loop(node: &UVParseNode) -> GeneratorOutputType {
     let extra = node.search_extra_children(vec!["iterator", "start", "end", "step", "body"]);
 
     if !extra.is_empty() {
-        let first_extra = extra.first().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner extra tag",
-            node.span,
-        ))?;
+        let first_extra = extra.first().unwrap_or_spanned(node.span)?;
 
         return Err(SpannedError::new(
             "Found extra children inside `for` loop declaration",
@@ -41,10 +38,9 @@ pub fn parse_for_loop(node: &UVParseNode) -> GeneratorOutputType {
         }
     };
 
-    let iterator = iterator_node.get_inner_literal().ok_or(SpannedError::new(
-        "[INTERNAL ERROR] Cannot get inner literal for iterator",
-        iterator_node.span,
-    ))?;
+    let iterator = iterator_node
+        .get_inner_literal()
+        .unwrap_or_spanned(iterator_node.span)?;
 
     // Step
     let step = match node.get_one_tag_by_name("step") {
@@ -73,10 +69,7 @@ pub fn parse_while_loop(node: &UVParseNode) -> GeneratorOutputType {
     let extra = node.search_extra_children(vec!["test", "body"]);
 
     if !extra.is_empty() {
-        let first_extra = extra.first().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner extra tag",
-            node.span,
-        ))?;
+        let first_extra = extra.first().unwrap_or_spanned(node.span)?;
 
         return Err(SpannedError::new(
             "Found extra children inside `while` loop declaration",
@@ -124,8 +117,5 @@ fn get_and_validate_inner_tag<'a>(
         }
     };
 
-    x_node.get_tag_at(0).ok_or(SpannedError::new(
-        "[INTERNAL ERROR] Cannot get inner tag",
-        x_node.span,
-    ))
+    x_node.get_tag_at(0).unwrap_or_spanned(x_node.span)
 }

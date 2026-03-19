@@ -121,6 +121,12 @@ impl<T> Spanned<T> {
     }
 }
 
+impl<T> Positional for Spanned<T> {
+    fn get_span(&self) -> Span {
+        self.span
+    }
+}
+
 impl<T> Deref for Spanned<T> {
     type Target = T;
 

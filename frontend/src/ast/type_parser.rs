@@ -4,7 +4,7 @@ use crate::{
         types::{ASTBlockType, UVType},
     },
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
 };
 
 /// Parse Ultraviolet type
@@ -59,11 +59,7 @@ fn parse_union(node: &UVParseNode) -> Result<UVType, SpannedError> {
     }
 
     if node.children_len() == 1 {
-        let t = node.get_tag_at(0).ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner tag inside `union` block",
-            node.span,
-        ))?;
-
+        let t = node.get_tag_at(0).unwrap_or_spanned(node.span)?;
         return Ok(parse_type_raw(t)?);
     }
 

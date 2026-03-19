@@ -4,6 +4,7 @@ use crate::{
         types::{ASTBlockType, ConditionalOperator},
     },
     errors::SpannedError,
+    tokens_parser::traits::UnwrapOptionError,
     tokens_parser::types::UVParseNode,
     types::{Positional, Spanned},
 };
@@ -13,10 +14,7 @@ pub fn parse_conditional_op(node: &UVParseNode) -> GeneratorOutputType {
     let extra = node.search_extra_children(vec!["test", "then", "else"]);
 
     if !extra.is_empty() {
-        let first_extra = extra.first().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner extra tag",
-            node.span,
-        ))?;
+        let first_extra = extra.first().unwrap_or_spanned(node.span)?;
 
         return Err(SpannedError::new(
             "Found extra children inside conditional operator",
@@ -35,10 +33,7 @@ pub fn parse_conditional_op(node: &UVParseNode) -> GeneratorOutputType {
             t.span,
         )),
 
-        Some(t) => generate_ast(t.get_tag_at(0).ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get inner tag",
-            node.span,
-        ))?),
+        Some(t) => generate_ast(t.get_tag_at(0).unwrap_or_spanned(node.span)?),
 
         None => Err(SpannedError::new(
             "Conditional operator must have an `test` block inside",
@@ -65,10 +60,7 @@ fn parse_outcomes(
             t.span,
         )),
         Some(t) if !t.all_tags() => {
-            let extra_lit = t.get_inner_literal().ok_or(SpannedError::new(
-                "[INTERNAL ERROR] Cannot get inner literal for error",
-                t.span,
-            ))?;
+            let extra_lit = t.get_inner_literal().unwrap_or_spanned(t.span)?;
 
             Err(SpannedError::new(
                 "Found unexpected literal",

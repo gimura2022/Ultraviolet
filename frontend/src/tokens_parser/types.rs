@@ -1,4 +1,8 @@
-use crate::types::{Positional, Span, Spanned};
+use crate::{
+    errors::SpannedError,
+    tokens_parser::traits::UnwrapOptionError,
+    types::{Positional, Span, Spanned},
+};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct UVParseNode {
@@ -102,6 +106,12 @@ impl UVParseNode {
     }
 }
 
+impl Positional for UVParseNode {
+    fn get_span(&self) -> Span {
+        self.span
+    }
+}
+
 // -------------------------------------
 
 #[derive(Debug, Clone, PartialEq)]
@@ -116,6 +126,15 @@ impl Positional for UVParseBody {
             UVParseBody::String(type_with_span) => type_with_span.span,
             UVParseBody::Tag(parse_node) => parse_node.span,
         }
+    }
+}
+
+impl<T: Positional + Clone> UnwrapOptionError<T> for Option<T> {
+    fn unwrap_or_spanned(&self, parent_span: Span) -> Result<T, crate::errors::SpannedError> {
+        self.clone().ok_or(SpannedError::new(
+            "[INTERNAL ERROR] Cannot unwrap Option value",
+            parent_span,
+        ))
     }
 }
 

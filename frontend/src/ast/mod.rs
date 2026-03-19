@@ -9,13 +9,12 @@ use crate::{
         loops::{parse_for_loop, parse_while_loop},
         math_op::parse_math_op,
         traits::{StringToUVCompareOp, StringToUVLogicalOp, StringToUVMathOp, StringToUVType},
-        type_parser::parse_type,
         types::{ASTBlockType, ProgramBlock},
         values::parse_value,
         variables::{parse_var_access, parse_var_assign, parse_var_definition},
     },
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
 };
 use once_cell::sync::Lazy;
 
@@ -123,10 +122,7 @@ pub fn generate_ast(node: &UVParseNode) -> GeneratorOutputType {
 /// Parse node children to ast
 pub fn parse_children_vec(n: &UVParseNode) -> Result<Vec<ASTBlockType>, SpannedError> {
     if !n.all_tags() {
-        let literal = n.get_inner_literal().ok_or(SpannedError::new(
-            "[INTERNAL ERROR] Cannot get extra literal",
-            n.span,
-        ))?;
+        let literal = n.get_inner_literal().unwrap_or_spanned(n.span)?;
         return Err(SpannedError::new("Unexpected literal", literal.span));
     }
 
