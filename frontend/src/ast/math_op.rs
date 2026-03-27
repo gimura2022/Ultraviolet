@@ -1,8 +1,8 @@
 use crate::{
     ast::{
         GeneratorOutputType, parse_children_vec,
-        traits::{IsVariadic, StringToUVMathOp},
-        types::{ASTBlockType, MathOp},
+        traits::{ArgumentsCount, StringToUVMathOp},
+        types::{ASTBlockType, MathOp, MathOpType},
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
@@ -14,7 +14,7 @@ pub fn parse_math_op(node: &UVParseNode) -> GeneratorOutputType {
         .to_uvmath()
         .ok_or(SpannedError::new("Unknown math operation", node.span))?;
 
-    let children = parse_arguments(node, !op_type.is_variadic())?;
+    let children = parse_arguments(node, &op_type)?;
 
     Ok(ASTBlockType::MathOp(MathOp {
         op_type,
@@ -26,7 +26,7 @@ pub fn parse_math_op(node: &UVParseNode) -> GeneratorOutputType {
 /// Parse arguments for math functions
 pub fn parse_arguments(
     node: &UVParseNode,
-    only_two: bool,
+    op_type: &MathOpType,
 ) -> Result<Vec<ASTBlockType>, SpannedError> {
     if !node.all_tags() {
         return Err(SpannedError::new(
@@ -35,9 +35,22 @@ pub fn parse_arguments(
         ));
     }
 
-    if only_two && node.children_len() != 2 {
+    if node.children_len() < op_type.min_arguments_count() {
         return Err(SpannedError::new(
-            format!("`{}` math operation can handle only 2 arguments", node.name),
+            format!(
+                "`{}` cannot have less than {} operands",
+                node.name,
+                op_type.min_arguments_count()
+            ),
+            node.span,
+        ));
+    }
+
+    if let Some(max_args) = op_type.max_arguments_count()
+        && node.children_len() > max_args
+    {
+        return Err(SpannedError::new(
+            format!("Too much operands for `{}` math operation", node.name),
             node.span,
         ));
     }

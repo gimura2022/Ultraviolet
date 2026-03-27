@@ -1,8 +1,8 @@
 use crate::{
     ast::{
         GeneratorOutputType, parse_children_vec,
-        traits::{IsVariadic, StringToUVCompareOp},
-        types::{ASTBlockType, CompareOp},
+        traits::{ArgumentsCount, StringToUVCompareOp},
+        types::{ASTBlockType, CompareOp, CompareOpType},
     },
     errors::SpannedError,
     tokens_parser::types::UVParseNode,
@@ -15,7 +15,7 @@ pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {
         .to_uvcompare()
         .ok_or(SpannedError::new("Unknown comparison operation", node.span))?;
 
-    let children = parse_arguments(node, !op_type.is_variadic())?;
+    let children = parse_arguments(node, &op_type)?;
 
     Ok(ASTBlockType::CompareOp(CompareOp {
         op_type,
@@ -25,7 +25,10 @@ pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {
 }
 
 /// Parse arguments for compare
-fn parse_arguments(node: &UVParseNode, only_two: bool) -> Result<Vec<ASTBlockType>, SpannedError> {
+fn parse_arguments(
+    node: &UVParseNode,
+    op_type: &CompareOpType,
+) -> Result<Vec<ASTBlockType>, SpannedError> {
     if !node.all_tags() {
         return Err(SpannedError::new(
             "Unexpected literals inside comparison operation",
@@ -33,16 +36,24 @@ fn parse_arguments(node: &UVParseNode, only_two: bool) -> Result<Vec<ASTBlockTyp
         ));
     }
 
-    if node.children_len() < 2 {
+    if node.children_len() < op_type.min_arguments_count() {
         return Err(SpannedError::new(
-            "Comparison operator cannot have less than 2 operands",
+            format!(
+                "Comparison operator cannot have less than {} operands",
+                op_type.min_arguments_count()
+            ),
             node.span,
         ));
     }
 
-    if only_two && node.children_len() != 2 {
+    if let Some(max_args) = op_type.max_arguments_count()
+        && node.children_len() > max_args
+    {
         return Err(SpannedError::new(
-            format!("`{}` math operation can handle only 2 arguments", node.name),
+            format!(
+                "Too many arguments for `{}` comparison operation",
+                node.name
+            ),
             node.span,
         ));
     }

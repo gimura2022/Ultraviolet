@@ -1,7 +1,7 @@
 use crate::{
     ast::traits::{
-        ArgumentsCount, GetType, IsAssignable, IsVariadic, StringToUVCompareOp,
-        StringToUVLogicalOp, StringToUVMathOp, StringToUVType,
+        ArgumentsCount, GetType, IsAssignable, StringToUVCompareOp, StringToUVLogicalOp,
+        StringToUVMathOp, StringToUVType,
     },
     types::{Span, Spanned},
 };
@@ -228,11 +228,15 @@ impl StringToUVMathOp for str {
     }
 }
 
-impl IsVariadic for MathOpType {
-    fn is_variadic(&self) -> bool {
+impl ArgumentsCount for MathOpType {
+    fn min_arguments_count(&self) -> usize {
+        2
+    }
+
+    fn max_arguments_count(&self) -> Option<usize> {
         match self {
-            MathOpType::Sum | MathOpType::Mul => true,
-            MathOpType::Div | MathOpType::Mod | MathOpType::Sub => false,
+            MathOpType::Sum | MathOpType::Mul => None,
+            MathOpType::Div | MathOpType::Mod | MathOpType::Sub => Some(2),
         }
     }
 }
@@ -256,10 +260,17 @@ pub struct CompareOp {
     pub span: Span,
 }
 
-impl IsVariadic for CompareOpType {
-    fn is_variadic(&self) -> bool {
-        // TODO: In interpreter, implement proper handling variadic arguments
-        return false;
+impl ArgumentsCount for CompareOpType {
+    fn min_arguments_count(&self) -> usize {
+        2
+    }
+
+    fn max_arguments_count(&self) -> Option<usize> {
+        if matches!(self, Self::Equality) {
+            return None;
+        }
+
+        Some(2)
     }
 }
 
@@ -366,7 +377,7 @@ pub struct FunctionDefinitionArg {
 pub struct FunctionDefinition {
     pub name: Spanned<String>,
     pub arguments: Vec<FunctionDefinitionArg>,
-    pub return_type: Spanned<UVType>,
+    pub return_type: Spanned<Option<UVType>>,
 
     pub body: Vec<ASTBlockType>,
 

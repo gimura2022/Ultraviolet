@@ -2,21 +2,11 @@
 
     <head></head>
     <main>
-        <if>
-            <test>
-                <gte>
-                    <variable_name />
-                    <int>8</int>
-                </gte>
-            </test>
-
-            <then>
-                <int>12</int>
-            </then>
-            <else>
-                <!-- Else body -->
-            </else>
-        </if>
+        <neq>
+            <int>5</int>
+            <int>5</int>
+            <int>5</int>
+        </neq>
     </main>
 
 </program>

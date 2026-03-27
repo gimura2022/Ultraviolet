@@ -59,8 +59,3 @@ pub trait ArgumentsCount {
     /// Get allowed maximum of arguments count
     fn max_arguments_count(&self) -> Option<usize>;
 }
-
-pub trait IsVariadic {
-    /// Check if operator can handle variadic arguments
-    fn is_variadic(&self) -> bool;
-}
