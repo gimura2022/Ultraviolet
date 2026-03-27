@@ -131,7 +131,7 @@ pub enum ASTBlockType {
     MainBlock(Vec<ASTBlockType>),
 
     VariableDefinition(Box<VariableDefinition>),
-    FunctionDefinition(),
+    FunctionDefinition(Box<FunctionDefinition>),
 
     FunctionCall(),
     VariableAssignment(VariableAssign),
@@ -348,6 +348,27 @@ pub struct ConditionalOperator {
     pub test: ASTBlockType,
     pub then_body: Option<Spanned<Vec<ASTBlockType>>>,
     pub else_body: Option<Spanned<Vec<ASTBlockType>>>,
+
+    pub span: Span,
+}
+
+// -----------------------Function Definition --------------------------------
+
+#[derive(Debug)]
+pub struct FunctionDefinitionArg {
+    pub name: Spanned<String>,
+    pub arg_type: Spanned<UVType>,
+
+    pub span: Span,
+}
+
+#[derive(Debug)]
+pub struct FunctionDefinition {
+    pub name: Spanned<String>,
+    pub arguments: Vec<FunctionDefinitionArg>,
+    pub return_type: Spanned<UVType>,
+
+    pub body: Vec<ASTBlockType>,
 
     pub span: Span,
 }
