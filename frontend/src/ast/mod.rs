@@ -1,21 +1,26 @@
 use anyhow::Result;
 use regex::Regex;
-
-use crate::{
-    ast::{
-        compare_op::parse_compare_op,
-        conditional_op::parse_conditional_op,
-        functions::{parse_function_call, parse_function_definition},
-        logical_op::parse_logical_op,
-        loops::{parse_for_loop, parse_while_loop},
-        math_op::parse_math_op,
-        traits::{StringToUVCompareOp, StringToUVLogicalOp, StringToUVMathOp, StringToUVType},
-        types::{ASTBlockType, ProgramBlock},
-        values::parse_value,
-        variables::{parse_var_access, parse_var_assign, parse_var_definition},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
+    traits::frontend::{
+        ast::{StringToUVCompareOp, StringToUVLogicalOp, StringToUVMathOp, StringToUVType},
+        token_parser::UnwrapOptionError,
+    },
+    types::frontend::{
+        ast::{ASTBlockType, ProgramBlock},
+        tokens::UVParseNode,
+    },
+};
+
+use crate::ast::{
+    compare_op::parse_compare_op,
+    conditional_op::parse_conditional_op,
+    functions::{parse_function_call, parse_function_definition},
+    logical_op::parse_logical_op,
+    loops::{parse_for_loop, parse_while_loop},
+    math_op::parse_math_op,
+    values::parse_value,
+    variables::{parse_var_access, parse_var_assign, parse_var_definition},
 };
 use once_cell::sync::Lazy;
 
@@ -25,9 +30,7 @@ mod functions;
 mod logical_op;
 mod loops;
 mod math_op;
-mod traits;
 mod type_parser;
-mod types;
 mod values;
 mod variables;
 

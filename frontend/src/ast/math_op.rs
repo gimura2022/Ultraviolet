@@ -1,12 +1,13 @@
-use crate::{
-    ast::{
-        GeneratorOutputType, parse_children_vec,
-        traits::{ArgumentsCount, StringToUVMathOp},
-        types::{ASTBlockType, MathOp, MathOpType},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    traits::frontend::ast::{ArgumentsCount, StringToUVMathOp},
+    types::frontend::{
+        ast::{ASTBlockType, MathOp, MathOpType},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::{GeneratorOutputType, parse_children_vec};
 
 pub fn parse_math_op(node: &UVParseNode) -> GeneratorOutputType {
     let op_type = node

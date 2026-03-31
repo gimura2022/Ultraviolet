@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::types::{Positional, Span};
+use crate::{traits::frontend::Positional, types::frontend::Span};
 
 pub mod error_renderer;
 

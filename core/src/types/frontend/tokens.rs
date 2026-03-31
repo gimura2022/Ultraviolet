@@ -1,7 +1,7 @@
 use crate::{
     errors::SpannedError,
-    tokens_parser::traits::UnwrapOptionError,
-    types::{Positional, Span, Spanned},
+    traits::frontend::{Positional, token_parser::UnwrapOptionError},
+    types::frontend::{Span, Spanned},
 };
 
 #[derive(Debug, Clone, PartialEq)]

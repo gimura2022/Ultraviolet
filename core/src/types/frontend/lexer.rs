@@ -1,4 +1,4 @@
-use crate::types::Span;
+use crate::types::frontend::Span;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum UVLexerTokens {

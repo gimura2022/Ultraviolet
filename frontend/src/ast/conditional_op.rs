@@ -1,13 +1,14 @@
-use crate::{
-    ast::{
-        GeneratorOutputType, generate_ast, parse_children_vec,
-        types::{ASTBlockType, ConditionalOperator},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::traits::UnwrapOptionError,
-    tokens_parser::types::UVParseNode,
-    types::{Positional, Spanned},
+    traits::frontend::{Positional, token_parser::UnwrapOptionError},
+    types::frontend::{
+        Spanned,
+        ast::{ASTBlockType, ConditionalOperator},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::{GeneratorOutputType, generate_ast, parse_children_vec};
 
 /// Parse conditional operator declaration
 pub fn parse_conditional_op(node: &UVParseNode) -> GeneratorOutputType {

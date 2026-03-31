@@ -1,11 +1,11 @@
 use std::char;
 
-use crate::{
-    iterator::Iter,
-    lexer::types::{LexerParseState, UVLexerTokens, UVToken},
-    types::Span,
+use ultraviolet_core::types::frontend::{
+    Span,
+    lexer::{LexerParseState, UVLexerTokens, UVToken},
 };
-pub mod types;
+
+use crate::iterator::Iter;
 
 pub struct Lexer {
     iter: Iter<char>,
@@ -301,13 +301,12 @@ impl Lexer {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        lexer::{
-            Lexer,
-            types::{UVLexerTokens, UVToken},
-        },
-        types::Span,
+    use ultraviolet_core::types::frontend::{
+        Span,
+        lexer::{UVLexerTokens, UVToken},
     };
+
+    use crate::lexer::Lexer;
 
     fn get_tokens(code: &str) -> Vec<UVLexerTokens> {
         Lexer::new(code.to_owned())

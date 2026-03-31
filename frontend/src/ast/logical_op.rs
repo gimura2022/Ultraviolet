@@ -1,10 +1,13 @@
-use crate::{
-    ast::{
-        GeneratorOutputType, parse_children_vec, traits::{ArgumentsCount, StringToUVLogicalOp}, types::{ASTBlockType, LogicalOp}
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    traits::frontend::ast::{ArgumentsCount, StringToUVLogicalOp},
+    types::frontend::{
+        ast::{ASTBlockType, LogicalOp},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::{GeneratorOutputType, parse_children_vec};
 
 /// Parse Ultraviolet logical operators
 pub fn parse_logical_op(node: &UVParseNode) -> GeneratorOutputType {

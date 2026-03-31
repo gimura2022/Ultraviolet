@@ -1,8 +1,7 @@
-use crate::{
-    ast::types::UVType,
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
-    types::Spanned,
+    traits::frontend::token_parser::UnwrapOptionError,
+    types::frontend::{Spanned, ast::UVType, tokens::UVParseNode},
 };
 
 /// Parse Ultraviolet type into UVType

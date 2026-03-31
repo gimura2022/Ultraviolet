@@ -1,5 +1,11 @@
+pub mod ast;
+pub mod lexer;
+pub mod tokens;
+
 use anyhow::{Context, Result};
 use std::{fs, ops::Deref, path::Path};
+
+use crate::traits::frontend::Positional;
 
 /// Representation of input file
 pub struct SourceFile<'a> {
@@ -101,11 +107,6 @@ impl Default for Span {
     fn default() -> Self {
         Self { start: 0, end: 0 }
     }
-}
-
-pub trait Positional {
-    /// Get associated Span
-    fn get_span(&self) -> Span;
 }
 
 #[derive(Debug, Clone, PartialEq)]

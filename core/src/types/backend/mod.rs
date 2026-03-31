@@ -1,0 +1,71 @@
+use crate::types::frontend::ast::UVValue;
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
+
+pub type EnvRef = Rc<RefCell<Environment>>;
+
+/// Scope-based environment
+#[derive(Default, Debug)]
+pub struct Environment {
+    pub symbols: HashMap<String, Symbol>,
+    pub parent: Option<EnvRef>,
+}
+
+impl Environment {
+    /// Create new children environment from parent
+    pub fn new_child(parent: EnvRef) -> EnvRef {
+        Rc::new(RefCell::new(Self {
+            symbols: HashMap::new(),
+            parent: Some(parent),
+        }))
+    }
+
+    /// Find symbol by name
+    pub fn find(&self, name: impl Into<String>) -> Option<Symbol> {
+        let n = name.into();
+        if let Some(sym) = self.symbols.get(&n) {
+            return Some(sym.clone());
+        }
+
+        if let Some(parent) = &self.parent {
+            return parent.borrow().find(&n);
+        }
+
+        None
+    }
+
+    /// Define variable in current scope
+    pub fn define_variable(&mut self, name: String, value: UVValue) {
+        self.symbols
+            .insert(name, Symbol::Variable(Rc::new(RefCell::new(value))));
+    }
+}
+
+/*
+impl Drop for Environment {
+    fn drop(&mut self) {
+        println!("Environment dropped");
+    }
+}
+*/
+
+#[derive(Debug, Clone)]
+pub enum Symbol {
+    Variable(Rc<RefCell<UVValue>>),
+    Function(),
+}
+
+/// Indicates, when block ended with return, break, etc...
+#[derive(Debug)]
+pub enum ControlFlow {
+    Simple(UVValue),
+    Return(UVValue),
+}
+
+impl ControlFlow {
+    pub fn flatten(&self) -> &UVValue {
+        match self {
+            ControlFlow::Simple(uvvalue) => uvvalue,
+            ControlFlow::Return(uvvalue) => uvvalue,
+        }
+    }
+}

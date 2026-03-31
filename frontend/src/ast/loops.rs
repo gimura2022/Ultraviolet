@@ -1,12 +1,14 @@
-use crate::{
-    ast::{
-        GeneratorOutputType, generate_ast, parse_children_vec,
-        types::{ASTBlockType, ForLoop, WhileLoop},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
-    types::{Positional, Spanned},
+    traits::frontend::{Positional, token_parser::UnwrapOptionError},
+    types::frontend::{
+        Spanned,
+        ast::{ASTBlockType, ForLoop, WhileLoop},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::{GeneratorOutputType, generate_ast, parse_children_vec};
 
 /// Parse for loop
 pub fn parse_for_loop(node: &UVParseNode) -> GeneratorOutputType {

@@ -1,15 +1,16 @@
 use std::ops::Deref;
 
-use crate::tokens_parser::traits::UnwrapOptionError;
-use crate::types::Spanned;
-use crate::{
-    ast::{
-        GeneratorOutputType,
-        types::{ASTBlockType, UVValue},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    traits::frontend::token_parser::UnwrapOptionError,
+    types::frontend::{
+        Spanned,
+        ast::{ASTBlockType, UVValue},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::GeneratorOutputType;
 
 /// Parse UVValues.
 /// Caller must guarantee, that tag name is one of data types!

@@ -1,14 +1,18 @@
 use std::ops::Deref;
 
-use crate::{
-    ast::{
-        GeneratorOutputType, generate_ast, is_valid_identifier,
-        type_parser::validate_and_parse_inner_type_block,
-        types::{ASTBlockType, VariableAccess, VariableAssign, VariableDefinition},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::{traits::UnwrapOptionError, types::UVParseNode},
-    types::{Positional, Spanned},
+    traits::frontend::{Positional, token_parser::UnwrapOptionError},
+    types::frontend::{
+        Spanned,
+        ast::{ASTBlockType, VariableAccess, VariableAssign, VariableDefinition},
+        tokens::UVParseNode,
+    },
+};
+
+use crate::ast::{
+    GeneratorOutputType, generate_ast, is_valid_identifier,
+    type_parser::validate_and_parse_inner_type_block,
 };
 
 /// Parse definition of variables <let>

@@ -1,4 +1,4 @@
-use crate::ast::types::{CompareOpType, LogicalOpType, MathOpType, UVType};
+use crate::types::frontend::ast::{CompareOpType, LogicalOpType, MathOpType, UVType};
 
 pub trait GetType {
     /// Get type of node / value

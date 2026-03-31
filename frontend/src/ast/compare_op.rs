@@ -1,12 +1,13 @@
-use crate::{
-    ast::{
-        GeneratorOutputType, parse_children_vec,
-        traits::{ArgumentsCount, StringToUVCompareOp},
-        types::{ASTBlockType, CompareOp, CompareOpType},
-    },
+use ultraviolet_core::{
     errors::SpannedError,
-    tokens_parser::types::UVParseNode,
+    traits::frontend::ast::{ArgumentsCount, StringToUVCompareOp},
+    types::frontend::{
+        ast::{ASTBlockType, CompareOp, CompareOpType},
+        tokens::UVParseNode,
+    },
 };
+
+use crate::ast::{GeneratorOutputType, parse_children_vec};
 
 /// Parse Ultraviolet compare operators
 pub fn parse_compare_op(node: &UVParseNode) -> GeneratorOutputType {

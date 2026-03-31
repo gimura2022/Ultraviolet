@@ -1,11 +1,8 @@
-[package]
-name = "Ultraviolet"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-anyhow = "1.0.100"
-frontend = {path = "./frontend"}
-
 [workspace]
-members = ["frontend"]
+members = ["core", "frontend", "backend", "cli"]
+
+default-members = ["cli"]
+resolver = "2"
+
+[workspace.dependencies]
+anyhow = "1.0.100"

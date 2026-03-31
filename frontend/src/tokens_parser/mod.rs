@@ -1,13 +1,13 @@
-pub mod traits;
-pub mod types;
-
-use crate::{
+use ultraviolet_core::{
     errors::SpannedError,
-    iterator::Iter,
-    lexer::types::{UVLexerTokens, UVToken},
-    tokens_parser::types::{UVParseBody, UVParseNode, UVParseState},
-    types::{Span, Spanned},
+    types::frontend::{
+        Span, Spanned,
+        lexer::{UVLexerTokens, UVToken},
+        tokens::{UVParseBody, UVParseNode, UVParseState},
+    },
 };
+
+use crate::iterator::Iter;
 
 /**
 Parses a tokens flow to a parse tree
@@ -138,14 +138,12 @@ impl TokenParser {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        lexer::Lexer,
-        tokens_parser::{
-            TokenParser,
-            types::{UVParseBody, UVParseNode},
-        },
-        types::{Span, Spanned},
+    use ultraviolet_core::types::frontend::{
+        Span, Spanned,
+        tokens::{UVParseBody, UVParseNode},
     };
+
+    use crate::{lexer::Lexer, tokens_parser::TokenParser};
 
     fn get_nodes(code: &str) -> UVParseNode {
         TokenParser::new(Lexer::new(code.to_owned()).parse())

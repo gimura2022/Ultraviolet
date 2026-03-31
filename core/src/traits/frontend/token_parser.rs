@@ -1,7 +1,4 @@
-use crate::{
-    errors::SpannedError,
-    types::{Positional, Span},
-};
+use crate::{errors::SpannedError, traits::frontend::Positional, types::frontend::Span};
 
 pub trait UnwrapOptionError<T> {
     /// Unwrapping Option to a value or throw a spanned error

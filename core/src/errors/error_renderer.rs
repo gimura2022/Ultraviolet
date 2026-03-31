@@ -1,10 +1,8 @@
-use crate::{
-    errors::SpannedError,
-    types::{Positional, SourceFile},
-};
 use anyhow::{Context, Result};
 use colored::Colorize;
 use std::{cmp::min, fmt::Write};
+
+use crate::{errors::SpannedError, traits::frontend::Positional, types::frontend::SourceFile};
 
 /// Trait for positional errors, that renders error messages
 pub trait ErrorRenderer {

@@ -1,19 +1,21 @@
 use crate::{
-    ast::traits::{
+    traits::frontend::ast::{
         ArgumentsCount, GetType, IsAssignable, StringToUVCompareOp, StringToUVLogicalOp,
         StringToUVMathOp, StringToUVType,
     },
-    types::{Span, Spanned},
+    types::frontend::{Span, Spanned},
 };
 
 /// Typed value container
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum UVValue {
     Int(i64),
     Float(f64),
     String(String),
     Boolean(bool),
     Null,
+
+    Void,
 }
 
 impl GetType for UVValue {
@@ -24,6 +26,8 @@ impl GetType for UVValue {
             UVValue::String(_) => UVType::String,
             UVValue::Boolean(_) => UVType::Boolean,
             UVValue::Null => UVType::Null,
+
+            UVValue::Void => UVType::Void,
         }
     }
 }
@@ -36,6 +40,7 @@ pub enum UVType {
     String,
     Boolean,
     Null,
+    Void,
 
     Union(Vec<UVType>),
 }
@@ -404,9 +409,9 @@ pub struct FunctionCall {
 
 #[cfg(test)]
 mod tests {
-    use crate::ast::{
-        traits::{IsAssignable, StringToUVType},
-        types::UVType,
+    use crate::{
+        traits::frontend::ast::{IsAssignable, StringToUVType},
+        types::frontend::ast::UVType,
     };
 
     #[test]
