@@ -6,25 +6,39 @@ use ultraviolet_core::{
     },
 };
 
-use crate::eval::{
-    program::eval_program,
-    variables::{access_variable, assign_variable, define_variable},
+use crate::{
+    builtins::functions::{execute_builtin_function, is_builtin_function},
+    eval::{
+        conditional_op::eval_conditional_op,
+        program::eval_program,
+        variables::{access_variable, assign_variable, define_variable},
+    },
 };
+mod conditional_op;
 mod program;
 mod variables;
 
 pub fn eval(node: &ASTBlockType, env: EnvRef) -> Result<ControlFlow, SpannedError> {
     Ok(match node {
+        // Main program and others service blocks
         ASTBlockType::Program(program_block) => eval_program(program_block, env)?,
         ASTBlockType::HeadBlock(blocks) | ASTBlockType::MainBlock(blocks) => {
             eval_every(&blocks, env)?
         }
+
+        // Variables things
         ASTBlockType::VariableDefinition(def) => define_variable(def, env)?,
-        ASTBlockType::FunctionDefinition(function_definition) => todo!(),
-        ASTBlockType::FunctionCall(function_call) => todo!(),
         ASTBlockType::VariableAssignment(var_assign) => assign_variable(var_assign, env)?,
         ASTBlockType::VariableAccess(var_acc) => access_variable(var_acc, env)?,
-        ASTBlockType::ConditionalOp(conditional_operator) => todo!(),
+
+        // Functions things
+        ASTBlockType::FunctionDefinition(function_definition) => todo!(),
+        ASTBlockType::FunctionCall(fc) if is_builtin_function(&fc.name) => {
+            execute_builtin_function(fc, env)?
+        }
+        ASTBlockType::FunctionCall(function_call) => todo!(),
+
+        ASTBlockType::ConditionalOp(co) => eval_conditional_op(co, env)?,
         ASTBlockType::MathOp(math_op) => todo!(),
         ASTBlockType::LogicalOp(logical_op) => todo!(),
         ASTBlockType::CompareOp(compare_op) => todo!(),

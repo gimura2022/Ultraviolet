@@ -1,34 +1,24 @@
 <program>
     <main>
-        <let>
-            <name>outer</name>
-            <value>
-                <g>
-                    <let>
-                        <name>inner</name>
-                        <value>
-                            <int>10</int>
-                        </value>
-                    </let>
+        <call println>
+            <if>
+                <test>
+                    <bool>1</bool>
+                </test>
 
+                <then>
                     <return>
-                        <inner />
+                        <str>It's true</str>
                     </return>
-                </g>
-            </value>
-        </let>
+                </then>
 
-        <outer>
-            <g>
-                <return>
-                    <outer />
-                </return>
-            </g>
-        </outer>
-
-        <return>
-            <outer />
-        </return>
+                <else>
+                    <return>
+                        <str>Love is a lie</str>
+                    </return>
+                </else>
+            </if>
+        </call>
     </main>
 
 </program>

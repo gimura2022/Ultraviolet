@@ -32,6 +32,19 @@ impl GetType for UVValue {
     }
 }
 
+impl std::fmt::Display for UVValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UVValue::Int(i) => write!(f, "{}", i),
+            UVValue::Float(fl) => write!(f, "{}", fl),
+            UVValue::String(s) => write!(f, "{}", s),
+            UVValue::Boolean(b) => write!(f, "{}", b),
+            UVValue::Null => write!(f, "null"),
+            UVValue::Void => write!(f, "void"),
+        }
+    }
+}
+
 /// Ultraviolet primitive types
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum UVType {
@@ -100,6 +113,7 @@ impl StringToUVType for str {
             "str" => Some(UVType::String),
             "bool" => Some(UVType::Boolean),
             "null" => Some(UVType::Null),
+            "void" => Some(UVType::Void),
             _ => None,
         }
     }

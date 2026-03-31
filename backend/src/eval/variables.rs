@@ -18,9 +18,7 @@ pub fn define_variable(
             var_def.span,
         ));
     }
-
-    let new_env = Environment::new_child(env.clone());
-    let binding = eval(&var_def.value.value, new_env)?;
+    let binding = eval(&var_def.value.value, env.clone())?;
     let value = binding.flatten();
 
     env.borrow_mut()

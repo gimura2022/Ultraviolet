@@ -25,6 +25,10 @@ pub fn parse_value(node: &UVParseNode) -> GeneratorOutputType {
                 validate_null(&node)?;
                 UVValue::Null
             }
+            "void" => {
+                validate_null(&node)?;
+                UVValue::Void
+            }
             _ => {
                 return Err(SpannedError::new(
                     format!("Unknown value type `{}`", node.name),
@@ -98,7 +102,7 @@ fn parse_boolean(node: &UVParseNode) -> Result<bool, SpannedError> {
 fn validate_null(node: &UVParseNode) -> Result<(), SpannedError> {
     if !node.self_closing {
         return Err(SpannedError::new(
-            "`null` tag must be self-closing",
+            "That tag must be self-closing",
             node.span,
         ));
     }
