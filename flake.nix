@@ -40,6 +40,7 @@
           ultraviolet = naersk'.buildPackage {
             inherit nativeBuildInputs;
 
+            pname = "ultraviolet-cli";
             src = ./.;
           };
         };
