@@ -33,6 +33,7 @@ pub fn eval(node: &ASTBlockType, env: EnvRef) -> Result<ControlFlow, SpannedErro
         ASTBlockType::VariableAssignment(var_assign) => assign_variable(var_assign, env)?,
 
         // Builtin constants
+        // TODO: Local variables should override builtin constants
         ASTBlockType::VariableAccess(var_acc) if is_builtin_constant(&var_acc.name) => {
             get_builtin_constant(&var_acc.name)
         }

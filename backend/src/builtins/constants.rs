@@ -6,6 +6,14 @@ lazy_static! {
     static ref BUILTIN_CONSTANTS: HashMap<&'static str, UVValue> = {
         let mut m = HashMap::new();
         m.insert("endl", UVValue::String("\n".to_string()));
+        m.insert("tab", UVValue::String("\t".to_string()));
+        m.insert("space", UVValue::String(" ".to_string()));
+
+        m.insert("pi", UVValue::Float(3.141592653589793));
+        m.insert("e", UVValue::Float(2.718281828459045));
+
+        m.insert("os", UVValue::String(std::env::consts::OS.to_string()));
+        m.insert("arch", UVValue::String(std::env::consts::ARCH.to_string()));
         m
     };
 }
