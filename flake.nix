@@ -26,7 +26,7 @@
         toolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
 
         nativeBuildInputs = with pkgs; [
-          pkg-config
+          pkg-config mold
         ];
 
         naersk' = pkgs.callPackage naersk {
