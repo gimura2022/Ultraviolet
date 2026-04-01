@@ -34,9 +34,11 @@ impl Environment {
     }
 
     /// Define variable in current scope
-    pub fn define_variable(&mut self, name: String, value: UVValue) {
-        self.symbols
-            .insert(name, Symbol::Variable(Rc::new(RefCell::new(value))));
+    pub fn define_variable(&mut self, name: String, value: UVValue, constant: bool) {
+        self.symbols.insert(
+            name,
+            Symbol::Variable(Rc::new(RefCell::new(RTVariable::new_from(value, constant)))),
+        );
     }
 }
 
@@ -50,8 +52,25 @@ impl Drop for Environment {
 
 #[derive(Debug, Clone)]
 pub enum Symbol {
-    Variable(Rc<RefCell<UVValue>>),
+    Variable(Rc<RefCell<RTVariable>>),
     Function(),
+}
+
+/// Runtime variable struct'
+#[derive(Debug, Clone)]
+pub struct RTVariable {
+    pub value: UVValue,
+    pub constant: bool,
+}
+
+impl RTVariable {
+    /// Create new variable from value
+    pub fn new_from(val: UVValue, constant: bool) -> Self {
+        Self {
+            value: val,
+            constant: constant,
+        }
+    }
 }
 
 /// Indicates, when block ended with return, break, etc...

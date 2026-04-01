@@ -1,3 +1,4 @@
+use crate::eval::eval;
 use ultraviolet_core::{
     errors::SpannedError,
     types::{
@@ -5,8 +6,6 @@ use ultraviolet_core::{
         frontend::ast::ProgramBlock,
     },
 };
-
-use crate::eval::eval;
 
 /// Evaluate program block
 pub fn eval_program(program: &Box<ProgramBlock>, env: EnvRef) -> Result<ControlFlow, SpannedError> {

@@ -20,5 +20,5 @@ fn main() {
 
 fn run(source: &SourceFile) -> Result<ControlFlow, SpannedError> {
     let ast = frontend::process(source)?;
-    Ok(backend::eval::eval(&ast, EnvRef::default())?)
+    backend::eval::eval(&ast, EnvRef::default())
 }

@@ -1,3 +1,4 @@
+use crate::eval::{eval, eval_block};
 use ultraviolet_core::{
     errors::SpannedError,
     types::{
@@ -5,8 +6,6 @@ use ultraviolet_core::{
         frontend::ast::{ConditionalOperator, UVValue},
     },
 };
-
-use crate::eval::{eval, eval_block};
 
 /// Evaluate conditional operator
 pub fn eval_conditional_op(

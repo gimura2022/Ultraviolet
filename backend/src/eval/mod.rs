@@ -1,17 +1,16 @@
-use ultraviolet_core::{
-    errors::SpannedError,
-    types::{
-        backend::{ControlFlow, EnvRef, Environment},
-        frontend::ast::{ASTBlockType, UVValue},
-    },
-};
-
 use crate::{
     builtins::functions::{execute_builtin_function, is_builtin_function},
     eval::{
         conditional_op::eval_conditional_op,
         program::eval_program,
         variables::{access_variable, assign_variable, define_variable},
+    },
+};
+use ultraviolet_core::{
+    errors::SpannedError,
+    types::{
+        backend::{ControlFlow, EnvRef, Environment},
+        frontend::ast::{ASTBlockType, UVValue},
     },
 };
 mod conditional_op;

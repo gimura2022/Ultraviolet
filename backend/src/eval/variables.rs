@@ -21,8 +21,11 @@ pub fn define_variable(
 
     match eval(&var_def.value.value, env.clone())? {
         ControlFlow::Simple(value) => {
-            env.borrow_mut()
-                .define_variable(var_def.name.value.clone(), value.clone());
+            env.borrow_mut().define_variable(
+                var_def.name.value.clone(),
+                value.clone(),
+                var_def.is_const,
+            );
             Ok(ControlFlow::Simple(UVValue::Void))
         }
         ControlFlow::Return(uvvalue) => Ok(ControlFlow::Return(uvvalue)),
@@ -33,7 +36,7 @@ pub fn define_variable(
 pub fn access_variable(var_acc: &VariableAccess, env: EnvRef) -> Result<ControlFlow, SpannedError> {
     match env.borrow().find(var_acc.name.clone()) {
         Some(sym) => match sym {
-            Symbol::Variable(val) => Ok(ControlFlow::Simple(val.borrow().clone())),
+            Symbol::Variable(val) => Ok(ControlFlow::Simple(val.borrow().clone().value)),
             _ => {
                 return Err(SpannedError::new(
                     format!("`{}` not a variable", var_acc.name),
@@ -62,18 +65,25 @@ pub fn assign_variable(
         )
     })?;
 
-    let Symbol::Variable(val) = sym else {
+    let Symbol::Variable(var) = sym else {
         return Err(SpannedError::new(
             format!("`{}` not a variable", assign_var.name),
             assign_var.span,
         ));
     };
 
+    if var.borrow().constant {
+        return Err(SpannedError::new(
+            "Cannot assign to a constant variable",
+            assign_var.span,
+        ));
+    }
+
     let new_env = Environment::new_child(env);
     let result = eval(&assign_var.value, new_env)?;
 
     if let ControlFlow::Simple(uvvalue) = result {
-        *val.borrow_mut() = uvvalue;
+        (*var.borrow_mut()).value = uvvalue;
         Ok(ControlFlow::Simple(UVValue::Void))
     } else {
         Ok(result)
