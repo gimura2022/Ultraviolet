@@ -1,17 +1,7 @@
 <program>
     <main>
-        <let>
-            <name>input</name>
-            <value>
-                <call read>
-                    <str>Введите свое имя: </str>
-                </call>
-            </value>
-        </let>
-
         <call print>
-            <str>Ваше имя: </str>
-            <input />
+            <dll.suffix />
             <endl />
         </call>
     </main>

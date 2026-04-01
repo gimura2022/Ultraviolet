@@ -1,4 +1,7 @@
-use crate::types::frontend::ast::UVValue;
+use crate::{
+    traits::frontend::ast::GetType,
+    types::frontend::ast::{UVType, UVValue},
+};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 pub type EnvRef = Rc<RefCell<Environment>>;
@@ -54,6 +57,15 @@ impl Drop for Environment {
 pub enum Symbol {
     Variable(Rc<RefCell<RTVariable>>),
     Function(),
+}
+
+impl GetType for Symbol {
+    fn get_type(&self) -> UVType {
+        match self {
+            Symbol::Variable(rc) => rc.borrow().value.get_type(),
+            Symbol::Function() => todo!(),
+        }
+    }
 }
 
 /// Runtime variable struct'

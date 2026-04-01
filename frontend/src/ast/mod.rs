@@ -36,7 +36,7 @@ mod variables;
 
 pub type GeneratorOutputType = Result<ASTBlockType, SpannedError>;
 
-static IDENT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap());
+static IDENT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^[a-zA-Z_.][a-zA-Z0-9_.]*$").unwrap());
 
 /// Check if provided string is a valid var/fn identifier
 fn is_valid_identifier(s: &str) -> bool {

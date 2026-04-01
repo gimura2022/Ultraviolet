@@ -5,12 +5,6 @@ pub trait GetType {
     fn get_type(&self) -> UVType;
 }
 
-pub trait GetTypeScope {
-    /// Get symbol type from scope
-    /// TODO: Replace scope with real scope type
-    fn get_type_from_scope(&self, scope: Option<usize>) -> UVType;
-}
-
 pub trait IsAssignable {
     /// Returns `true` if `other` is a subtype of `self`.
     ///

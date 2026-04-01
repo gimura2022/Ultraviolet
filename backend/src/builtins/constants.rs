@@ -9,11 +9,28 @@ lazy_static! {
         m.insert("tab", UVValue::String("\t".to_string()));
         m.insert("space", UVValue::String(" ".to_string()));
 
-        m.insert("pi", UVValue::Float(3.141592653589793));
-        m.insert("e", UVValue::Float(2.718281828459045));
+        // FIXME: Can we use dots here?
+        m.insert("math.pi", UVValue::Float(3.141592653589793));
+        m.insert("math.exp", UVValue::Float(2.718281828459045));
 
-        m.insert("os", UVValue::String(std::env::consts::OS.to_string()));
-        m.insert("arch", UVValue::String(std::env::consts::ARCH.to_string()));
+        m.insert("os.name", UVValue::String(std::env::consts::OS.to_string()));
+        m.insert(
+            "os.arch",
+            UVValue::String(std::env::consts::ARCH.to_string()),
+        );
+        m.insert(
+            "os.family",
+            UVValue::String(std::env::consts::FAMILY.to_string()),
+        );
+
+        m.insert(
+            "dll.prefix",
+            UVValue::String(std::env::consts::DLL_PREFIX.to_string()),
+        );
+        m.insert(
+            "dll.suffix",
+            UVValue::String(std::env::consts::DLL_SUFFIX.to_string()),
+        );
         m
     };
 }
